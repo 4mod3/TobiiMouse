@@ -6,9 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>519</height>
+    <width>700</width>
+    <height>400</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Tobii Mouse</string>
@@ -17,6 +35,9 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="sizePolicy">
     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
      <horstretch>0</horstretch>
@@ -27,49 +48,172 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <y>30</y>
+      <width>101</width>
+      <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>Gaze Position:</string>
+     <string>Current Device:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="gazePositionLabel">
+   <widget class="QLabel" name="currentDeviceLabel">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <x>130</x>
+      <y>30</y>
+      <width>221</width>
+      <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>posi</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="GetAllDevices">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>180</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Get All Devices</string>
+     <string>TobiiInteractive::CurrentDeviceUrl</string>
     </property>
    </widget>
    <widget class="QListWidget" name="tobiiDevicesList">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>180</y>
-      <width>256</width>
-      <height>192</height>
+      <x>20</x>
+      <y>60</y>
+      <width>331</width>
+      <height>222</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::DefaultContextMenu</enum>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="useSelectedDeviceButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>290</y>
+      <width>161</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Use Selected Device</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Device List:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reloadListButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>290</y>
+      <width>161</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reload List</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>50</y>
+      <width>39</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Gaze Y</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="gazePositionX">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>50</y>
+      <width>241</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>true</bool>
+    </property>
+    <property name="digitCount">
+     <number>10</number>
+    </property>
+    <property name="segmentStyle">
+     <enum>QLCDNumber::Flat</enum>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>20</y>
+      <width>41</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Gaze X</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="gazePositionY">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>20</y>
+      <width>241</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>true</bool>
+    </property>
+    <property name="digitCount">
+     <number>10</number>
+    </property>
+    <property name="segmentStyle">
+     <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
   </widget>
@@ -78,7 +222,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>803</width>
+     <width>700</width>
      <height>21</height>
     </rect>
    </property>
