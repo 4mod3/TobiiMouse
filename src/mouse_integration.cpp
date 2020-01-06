@@ -11,6 +11,10 @@ static int ScreenWidth;
 static int LastX;
 static int LastY;
 
+static tobii_validity_t LastLeft;
+static tobii_validity_t LastRight;
+
+
 #ifdef __linux__
 static Display* _display;
 static Window _root_window;
@@ -165,4 +169,22 @@ void MouseIntegration::OnGaze(float x, float y)
     }
     LastX = posiX;
     LastY = posiY;
+}
+
+void MouseIntegration::OnClick(tobii_validity_t left_valid, tobii_validity_t right_valid)
+{
+    if((LastLeft & LastRight) && (left_valid ^ right_valid))
+    {
+        if(left_valid == TOBII_VALIDITY_VALID)
+        {
+            //left click
+            mouse_event(MOUSEEVENTF_RIGHTDOWN|MOUSEEVENTF_RIGHTUP,0,0,0,0);
+        }else{
+            //right click
+            mouse_event(MOUSEEVENTF_LEFTDOWN|MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+        }
+    }
+    //update LastValid
+    LastLeft = left_valid;
+    LastRight = right_valid;
 }

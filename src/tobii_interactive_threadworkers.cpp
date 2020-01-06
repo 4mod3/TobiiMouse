@@ -65,6 +65,7 @@ void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
     //ParentWindow, &GazeEnabled, This (used in slot emitter)
     tuple<MainWindow*, bool*, QThreadWorker*> pointers (reinterpret_cast<MainWindow*>(data1), reinterpret_cast<bool*>(data2), this);
 
+    //subscribe the gaze point stream
     auto err = tobii_gaze_point_subscribe( device,
         []( tobii_gaze_point_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
         {
@@ -89,6 +90,24 @@ void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
     if( err != TOBII_ERROR_NO_ERROR )
     {
         std::cerr << "Failed to subscribe to gaze stream." << tobii_error_message(err) << std::endl;
+    }
+
+    //subscribe the origin data for detect the blink
+    err = tobii_gaze_origin_subscribe( device,
+        []( tobii_gaze_origin_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
+        {
+            auto data_collection = *reinterpret_cast<tuple<MainWindow*, bool*, QThreadWorker*>*>(user_data);
+            //auto mwindow = get<0>(data_collection);
+            auto enabled = get<1>(data_collection);
+
+            if(*enabled){
+                MouseIntegration::OnClick(gaze_point->left_validity, gaze_point->right_validity);
+            }
+        }, &pointers);
+
+    if( err != TOBII_ERROR_NO_ERROR )
+    {
+       std::cerr << "Failed to subscribe to origin gaze stream." << tobii_error_message(err) << std::endl;
     }
 }
 
