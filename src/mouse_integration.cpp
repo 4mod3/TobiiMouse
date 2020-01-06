@@ -182,7 +182,7 @@ void MouseIntegration::OnClick(tobii_validity_t left_valid, tobii_validity_t rig
         }else if(!(LastLeft ^ left_valid) && (time_stamp - TimeNode > 200000))
         {
             left_valid? mouse_event(MOUSEEVENTF_RIGHTDOWN|MOUSEEVENTF_RIGHTUP,0,0,0,0):
-                        mouse_event(MOUSEEVENTF_LEFTDOWN|MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN|MOUSEEVENTF_LEFTUP, 0,0,0,0);
         }
     }
 
