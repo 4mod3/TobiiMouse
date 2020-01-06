@@ -36,7 +36,8 @@ void MoveMouseTo(int x, int y);
 void MoveMouseOffset(int x, int y);
 tuple<int, int> ProcessGazePosition(float x, float y);
 void OnGaze(float x, float y);
-void OnClick(tobii_validity_t left_valid, tobii_validity_t right_valid);
+void OnClick(tobii_validity_t left_valid, tobii_validity_t right_valid, int64_t time_stamp);
+void HeadRot(float r_x, float r_y, float r_z);
 
 #ifdef _WIN32
 WINBOOL CALLBACK EnumMonitors_CALLBACK(HMONITOR a,HDC b,LPRECT c,LPARAM d);

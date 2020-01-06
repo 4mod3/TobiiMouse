@@ -92,7 +92,25 @@ void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
         std::cerr << "Failed to subscribe to gaze stream." << tobii_error_message(err) << std::endl;
     }
 
-    //subscribe the origin data for detect the blink
+    //subscribe the origin data for detect the blink callback
+    err = tobii_gaze_origin_subscribe( device,
+        []( tobii_gaze_origin_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
+        {
+            auto data_collection = *reinterpret_cast<tuple<MainWindow*, bool*, QThreadWorker*>*>(user_data);
+            //auto mwindow = get<0>(data_collection);
+            auto enabled = get<1>(data_collection);
+
+            if(*enabled){
+                MouseIntegration::OnClick(gaze_point->left_validity, gaze_point->right_validity, gaze_point->timestamp_us);
+            }
+        }, &pointers);
+
+    if( err != TOBII_ERROR_NO_ERROR )
+    {
+       std::cerr << "Failed to subscribe to origin gaze stream." << tobii_error_message(err) << std::endl;
+    }
+
+    //subscribe the head pose change callback
     err = tobii_gaze_origin_subscribe( device,
         []( tobii_gaze_origin_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
         {

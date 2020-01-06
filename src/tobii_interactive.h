@@ -29,7 +29,8 @@ namespace TobiiInteractive {
     void HandleConnectivityCallback(void* data);
     void HandleGazeCallback(void* data);
 
-
+    //void gaze_point_callback( tobii_gaze_point_t const* gaze_point, void* user_data );
+    //void gaze_origin_callback( tobii_gaze_point_t const* gaze_point, void* user_data );
 };
 
 #endif // TOBIIINTERACTIVE_H
