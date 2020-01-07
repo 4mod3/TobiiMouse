@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <tuple>
 #include "mainwindow.h"
-#include "mouse_integration.h"
+#include "action_integration.h"
 
 using namespace TobiiInteractive;
 
@@ -62,28 +62,19 @@ void TobiiInteractive::connectivityWorker::doWork(void* data1, void* data2) {
 
 void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
 
-    //ParentWindow, &GazeEnabled, This (used in slot emitter)
-    tuple<MainWindow*, bool*, QThreadWorker*> pointers (reinterpret_cast<MainWindow*>(data1), reinterpret_cast<bool*>(data2), this);
+    //&HeadEnabled, &GazeEnabled, This (used in slot emitter)
+    tuple<bool*, bool*, QThreadWorker*> pointers (reinterpret_cast<bool*>(data1), reinterpret_cast<bool*>(data2), this);
 
     //subscribe the gaze point stream
     auto err = tobii_gaze_point_subscribe( device,
         []( tobii_gaze_point_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
         {
-            auto data_collection = *reinterpret_cast<tuple<MainWindow*, bool*, QThreadWorker*>*>(user_data);
-            auto mwindow = get<0>(data_collection);
+            auto data_collection = *reinterpret_cast<tuple<bool*, bool*, QThreadWorker*>*>(user_data);
             auto enabled = get<1>(data_collection);
 
             if(*enabled && gaze_point->validity == TOBII_VALIDITY_VALID)
             {
-#ifdef __linux__
-                auto _this = get<2>(data_collection);
-                tuple<MainWindow*, float, float> results(mwindow, gaze_point->position_xy[0], gaze_point->position_xy[1]);
-                emit _this->ResultReady(&results);
-#elif _WIN32
-                // Workaround of some strange pointer bug...
-                mwindow->OnGazePositionUIUpdate(gaze_point->position_xy[0], gaze_point->position_xy[1]);
-                MouseIntegration::OnGaze(gaze_point->position_xy[0], gaze_point->position_xy[1]);
-#endif
+                ActionIntegration::OnGaze(gaze_point->position_xy[0], gaze_point->position_xy[1]);
             }
         }, &pointers);
 
@@ -96,12 +87,12 @@ void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
     err = tobii_gaze_origin_subscribe( device,
         []( tobii_gaze_origin_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
         {
-            auto data_collection = *reinterpret_cast<tuple<MainWindow*, bool*, QThreadWorker*>*>(user_data);
+            auto data_collection = *reinterpret_cast<tuple<bool*, bool*, QThreadWorker*>*>(user_data);
             //auto mwindow = get<0>(data_collection);
             auto enabled = get<1>(data_collection);
 
-            if(*enabled){
-                MouseIntegration::OnClick(gaze_point->left_validity, gaze_point->right_validity, gaze_point->timestamp_us);
+            if(*enabled && (gaze_point->left_validity || gaze_point->right_validity)){
+                ActionIntegration::OnClick(gaze_point->left_validity, gaze_point->right_validity, gaze_point->timestamp_us);
             }
         }, &pointers);
 
@@ -111,21 +102,21 @@ void TobiiInteractive::gazeWorker::doWork(void* data1, void* data2){
     }
 
     //subscribe the head pose change callback
-    err = tobii_gaze_origin_subscribe( device,
-        []( tobii_gaze_origin_t const* gaze_point, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
+    err = tobii_head_pose_subscribe( device,
+        []( tobii_head_pose_t const* head_pose, void* user_data ) // user_data is tuple<MainWindow*, bool*, QThreadWorker*>
         {
-            auto data_collection = *reinterpret_cast<tuple<MainWindow*, bool*, QThreadWorker*>*>(user_data);
-            //auto mwindow = get<0>(data_collection);
+            auto data_collection = *reinterpret_cast<tuple<bool*, bool*, QThreadWorker*>*>(user_data);
+            auto head_enabled = get<0>(data_collection);
             auto enabled = get<1>(data_collection);
 
-            if(*enabled){
-                MouseIntegration::OnClick(gaze_point->left_validity, gaze_point->right_validity);
+            if(*enabled && *head_enabled && head_pose->rotation_validity_xyz[0]){
+                ActionIntegration::HeadRot(head_pose->rotation_xyz[0], head_pose->rotation_xyz[1], head_pose->timestamp_us);
             }
         }, &pointers);
 
     if( err != TOBII_ERROR_NO_ERROR )
     {
-       std::cerr << "Failed to subscribe to origin gaze stream." << tobii_error_message(err) << std::endl;
+       std::cerr << "Failed to subscribe to head pose stream." << tobii_error_message(err) << std::endl;
     }
 }
 
@@ -135,9 +126,7 @@ void TobiiInteractive::HandleConnectivityCallback(void* data){
 
 void TobiiInteractive::HandleGazeCallback(void* data){
     auto data_collection = reinterpret_cast<tuple<MainWindow*, float, float>*>(data);
-    auto mwindow = get<0>(*data_collection);
     auto x = get<1>(*data_collection);
     auto y = get<2>(*data_collection);
-    mwindow->OnGazePositionUIUpdate(x, y);
-    MouseIntegration::OnGaze(x, y);
+    ActionIntegration::OnGaze(x, y);
 }

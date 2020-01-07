@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <chrono>
 #include <thread>
-#include "mouse_integration.h"
+#include "action_integration.h"
 
 // Create atomic used for inter thread communication
 //static atomic<bool> exit_thread( false );
@@ -27,7 +27,7 @@ void TobiiInteractive::init(void* parentWindow) noexcept {
     connectivityController = new ThreadController(new connectivityWorker(), &HandleConnectivityCallback);
     gazeController = new ThreadController(new gazeWorker(), &HandleGazeCallback);
 
-    MouseIntegration::init();
+    ActionIntegration::init();
 }
 
 vector<string> TobiiInteractive::reload_devices(){
@@ -67,7 +67,7 @@ int TobiiInteractive::start_subscribe_gaze(const char* deviceAddressUrl){
 
     // Start the background processing thread before subscribing to data.
     connectivityController->StartOperate(CurrentDevice, &GazeEnabled);
-    gazeController->StartOperate(ParentWindow, &GazeEnabled);
+    gazeController->StartOperate(&GazeEnabled, &GazeEnabled);
     return 0;
 }
 

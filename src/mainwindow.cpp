@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tobii_interactive.h"
-#include "mouse_integration.h"
+#include "action_integration.h"
 
 #include <QMessageBox>
 #include <QThread>
@@ -21,11 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     TobiiInteractive::init(this);
     reloadTobiiDeviceList();
     gazeThread = new QThread();
-}
-
-void MainWindow::OnGazePositionUIUpdate(float x, float y){
-    ui->gazePositionX->display(QString::fromStdString(to_string(x)));
-    ui->gazePositionY->display(QString::fromStdString(to_string(y)));
 }
 
 void MainWindow::reloadTobiiDeviceList()
@@ -64,19 +59,4 @@ void MainWindow::on_actionQuit_triggered()
 {
     TobiiInteractive::stop_subscribe_gaze();
     QApplication::quit();
-}
-
-void MainWindow::on_absoluteButton_clicked(bool checked)
-{
-    if(checked) MouseIntegration::SetWorkingMode(TOBII_MOUSE_MODE_MOVE_ABSOLUTE);
-}
-
-void MainWindow::on_relativeButton_clicked(bool checked)
-{
-    if(checked) MouseIntegration::SetWorkingMode(TOBII_MOUSE_MODE_MOVE_RELATIVE);
-}
-
-void MainWindow::on_radioButton_clicked(bool checked)
-{
-    if(checked) MouseIntegration::SetWorkingMode(TOBII_MOUSE_MODE_MOVE_BY_SECTIONS);
 }

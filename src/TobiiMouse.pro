@@ -24,9 +24,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        action_integration.cpp \
         main.cpp \
         mainwindow.cpp \
-        mouse_integration.cpp \
         noise_cancellation.cpp \
         qthread_controller/qthreadcontroller.cpp \
         qthread_controller/qthreadworker.cpp \
@@ -34,8 +34,8 @@ SOURCES += \
         tobii_interactive_threadworkers.cpp
 
 HEADERS += \
+        action_integration.h \
         mainwindow.h \
-        mouse_integration.h \
         noise_cancellation.h \
         qthread_controller/qthreadcontroller.h \
         qthread_controller/qthreadworker.h \

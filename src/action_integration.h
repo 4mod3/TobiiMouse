@@ -1,5 +1,5 @@
-#ifndef MOUSE_INTEGRATION_H
-#define MOUSE_INTEGRATION_H
+#ifndef ACTION_INTEGRATION_H
+#define ACTION_INTEGRATION_H
 
 #include <tuple>
 #include "tobiimouse.h"
@@ -21,25 +21,25 @@
 
 using namespace std;
 
-enum MOUSEWORKINGMODE_E{
-    TOBII_MOUSE_MODE_MOVE_ABSOLUTE,
-    TOBII_MOUSE_MODE_MOVE_RELATIVE,
-    TOBII_MOUSE_MODE_MOVE_BY_SECTIONS
-};
-
-namespace MouseIntegration
+namespace ActionIntegration
 {
-void SetWorkingMode(MOUSEWORKINGMODE_E mode);
 void init();
 void MoveMouseTo(int x, int y);
-void MoveMouseOffset(int x, int y);
 tuple<int, int> ProcessGazePosition(float x, float y);
 void OnGaze(float x, float y);
 void OnClick(tobii_validity_t left_valid, tobii_validity_t right_valid, int64_t time_stamp);
-void HeadRot(float r_x, float r_y, float r_z);
+void HeadRot(float r_x, float r_y, int64_t timestamp);
+void HeadActionHandle();
 
-void MoveMouseByScreenSection(int x, int y);
-
+typedef enum head_pose_states
+{
+    HOLD,
+    NONE_ACTION,
+    TURN_LEFT,
+    TURN_RIGHT,
+    RISE_UP,
+    NOD_DOWN
+} head_pose_states;
 #ifdef _WIN32
 WINBOOL CALLBACK EnumMonitors_CALLBACK(HMONITOR a,HDC b,LPRECT c,LPARAM d);
 #endif
