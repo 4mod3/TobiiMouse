@@ -28,3 +28,14 @@ make
 ```cmd
 REM Coming soon!
 ```
+## USE
++ **Trace Gaze point**. Automatically trace user's eyes gaze point, then move the cursor to the address.
++ **Blink Events**.	
+	+ Single left blink----->Mouse LEFT HIT.
+	+ Single right blink----->Open up or Turn off *Head Events Response*.
++ **Head Events**.
+open action
+	+ Turn left-----> Keyboard "A".
+	+ Turn right -----> Keyboard "D".
+	+ Rise up------> Keyboard "W".
+	+ Nod ------> Keyboard "S".
